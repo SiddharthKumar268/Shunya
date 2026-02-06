@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="loginstyle.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Himalayan Mesh Protocol - Login</title>
+</head>
+<body>
+  <!-- VIDEO INTRO SECTION -->
+  <div class="video-intro-overlay" id="video-intro">
+    <video class="intro-video" id="intro-video" muted autoplay>
+      <source src="../assets/intro.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <button class="skip-video-btn" id="skip-video">SKIP INTRO →</button>
+  </div>
+
+  <!-- LEFT SECTION: LOGIN FORM -->
+  <div class="left-section">
+    <div class="login-container">
+      <div class="login-header">
+        <div class="logo">🛡️</div>
+        <h1>HIMALAYAN MESH PROTOCOL</h1>
+        <p>SECURE MILITARY COMMUNICATION</p>
+      </div>
+
+      <div id="error-message" class="error-message"></div>
+      <div id="success-message" class="success-message"></div>
+
+      <!-- Step 1: Login Form -->
+      <form id="login-form">
+        <div class="form-group">
+          <label for="username">USERNAME</label>
+          <input type="text" id="username" placeholder="Enter your username" required autocomplete="username">
+        </div>
+
+        <div class="form-group">
+          <label for="password">PASSWORD</label>
+          <input type="password" id="password" placeholder="Enter your password" required autocomplete="current-password">
+        </div>
+
+        <button type="submit" class="login-btn" id="login-btn">🔐 LOGIN</button>
+        
+        <div class="toggle-form">
+          Don't have an account? <a id="show-register">Register here</a>
+        </div>
+      </form>
+
+      <!-- Step 2: Registration Form -->
+      <form id="register-form" class="hidden">
+        <div class="form-group">
+          <label for="reg-username">USERNAME</label>
+          <input type="text" id="reg-username" placeholder="Choose a username" required autocomplete="username" minlength="3">
+        </div>
+
+        <div class="form-group">
+          <label for="reg-email">EMAIL</label>
+          <input type="email" id="reg-email" placeholder="Enter your email" required autocomplete="email">
+        </div>
+
+        <div class="form-group">
+          <label for="reg-password">PASSWORD</label>
+          <input type="password" id="reg-password" placeholder="Choose a password" required autocomplete="new-password" minlength="6">
+        </div>
+
+        <div class="form-group">
+          <label for="reg-role">ROLE</label>
+          <select id="reg-role" required>
+            <option value="">Select Role</option>
+            <option value="operator">Operator</option>
+            <option value="admin">Admin</option>
+            <option value="viewer">Viewer</option>
+          </select>
+        </div>
+
+        <button type="submit" class="login-btn" id="register-btn">🎖️ REGISTER</button>
+        
+        <div class="toggle-form">
+          Already have an account? <a id="show-login">Login here</a>
+        </div>
+      </form>
+
+      <!-- Step 3: OTP Verification Form -->
+      <form id="otp-form" class="hidden">
+        <p style="text-align: center; color: #a8b8d8; margin-bottom: 20px; font-size: 14px;">
+          Enter the 6-digit OTP sent to <strong id="masked-email" style="color: #00ff95;"></strong>
+        </p>
+
+        <div class="otp-input-group">
+          <input type="text" class="otp-input" maxlength="1" id="otp1" autocomplete="off">
+          <input type="text" class="otp-input" maxlength="1" id="otp2" autocomplete="off">
+          <input type="text" class="otp-input" maxlength="1" id="otp3" autocomplete="off">
+          <input type="text" class="otp-input" maxlength="1" id="otp4" autocomplete="off">
+          <input type="text" class="otp-input" maxlength="1" id="otp5" autocomplete="off">
+          <input type="text" class="otp-input" maxlength="1" id="otp6" autocomplete="off">
+        </div>
+
+        <button type="submit" class="login-btn" id="verify-btn">✅ VERIFY OTP</button>
+
+        <div class="resend-link">
+          Didn't receive OTP? <a id="resend-otp">Resend OTP</a>
+        </div>
+
+        <div class="back-link">
+          <a id="back-to-login">← Back to Login</a>
+        </div>
+      </form>
+
+      <div class="security-badge">
+        <span>🔐 AES-256</span>
+        <span>🔑 RSA-2048</span>
+        <span>🛡️ BCRYPT</span>
+      </div>
+
+      <div class="footer-text">
+        Developed by <a href="https://siddharthkumar.tech" target="_blank">Siddharth Kumar</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT SECTION: PHOTO DISPLAY -->
+  <div class="right-section">
+    <div class="photo-container"></div>
+    <div class="photo-overlay"></div>
+    <div class="photo-content">
+      <h2>Secure Communications<br>Across the Himalayas</h2>
+      <p>Military-grade encryption protecting critical communications in the world's most challenging terrains.</p>
+      
+      <div class="feature-badges">
+        <div class="feature-badge">🛰️ Mesh Network</div>
+        <div class="feature-badge">🔒 End-to-End Encrypted</div>
+        <div class="feature-badge">⚡ Real-Time Sync</div>
+      </div>
+
+      <div class="stats-container">
+        <div class="stat-item">
+          <div class="stat-number">99.9%</div>
+          <div class="stat-label">Uptime</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">256-bit</div>
+          <div class="stat-label">Encryption</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">24/7</div>
+          <div class="stat-label">Support</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ===== VIDEO INTRO HANDLER =====
+    const videoIntro = document.getElementById('video-intro');
+    const introVideo = document.getElementById('intro-video');
+    const skipVideoBtn = document.getElementById('skip-video');
+
+    // Function to hide video intro
+    function hideVideoIntro() {
+      videoIntro.style.opacity = '0';
+      setTimeout(() => {
+        videoIntro.style.display = 'none';
+      }, 500);
+    }
+
+    // Skip button handler
+    skipVideoBtn.addEventListener('click', hideVideoIntro);
+
+    // Auto-hide when video ends
+    introVideo.addEventListener('ended', hideVideoIntro);
+
+    // Fallback: hide after 10 seconds (in case video doesn't load)
+    setTimeout(hideVideoIntro, 10000);
+
+    // ✅ API URL - Points to Node.js backend
+    const API_URL = 'http://localhost:5000/api';
+    let currentUsername = '';
+
+    // ===== LOGIN FORM HANDLER =====
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const loginBtn = document.getElementById('login-btn');
+      
+      loginBtn.disabled = true;
+      loginBtn.innerHTML = '🔄 LOGGING IN... <div class="spinner"></div>';
+      hideMessages();
+      
+      try {
+        const response = await fetch(`${API_URL}/auth/login`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ username, password })
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(data.error || 'Login failed');
+        }
+        
+        currentUsername = username;
+        document.getElementById('masked-email').textContent = data.email;
+        
+        showSuccess('OTP sent to your email! Check your inbox.');
+        
+        setTimeout(() => {
+          document.getElementById('login-form').classList.add('hidden');
+          document.getElementById('otp-form').classList.remove('hidden');
+          document.getElementById('otp1').focus();
+        }, 1500);
+        
+      } catch (error) {
+        showError(error.message);
+        loginBtn.disabled = false;
+        loginBtn.innerHTML = '🔐 LOGIN';
+      }
+    });
+
+    // ===== REGISTER FORM HANDLER =====
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const username = document.getElementById('reg-username').value;
+      const email = document.getElementById('reg-email').value;
+      const password = document.getElementById('reg-password').value;
+      const role = document.getElementById('reg-role').value;
+      const registerBtn = document.getElementById('register-btn');
+      
+      registerBtn.disabled = true;
+      registerBtn.innerHTML = '🔄 REGISTERING... <div class="spinner"></div>';
+      hideMessages();
+      
+      try {
+        const response = await fetch(`${API_URL}/auth/register`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ username, email, password, role })
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(data.error || 'Registration failed');
+        }
+        
+        showSuccess('✅ Registration successful! You can now login.');
+        
+        // Clear form
+        e.target.reset();
+        
+        // Switch to login form after 2 seconds
+        setTimeout(() => {
+          document.getElementById('register-form').classList.add('hidden');
+          document.getElementById('login-form').classList.remove('hidden');
+          document.getElementById('username').value = username;
+        }, 2000);
+        
+      } catch (error) {
+        showError(error.message);
+      } finally {
+        registerBtn.disabled = false;
+        registerBtn.innerHTML = '🎖️ REGISTER';
+      }
+    });
+
+    // ===== OTP FORM HANDLER =====
+    document.getElementById('otp-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const otp = Array.from({length: 6}, (_, i) => 
+        document.getElementById(`otp${i+1}`).value
+      ).join('');
+      
+      if (otp.length !== 6) {
+        showError('Please enter complete 6-digit OTP');
+        return;
+      }
+      
+      const verifyBtn = document.getElementById('verify-btn');
+      verifyBtn.disabled = true;
+      verifyBtn.innerHTML = '🔄 VERIFYING... <div class="spinner"></div>';
+      hideMessages();
+      
+      try {
+        const response = await fetch(`${API_URL}/auth/verify-otp`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ username: currentUsername, otp })
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(data.error || 'OTP verification failed');
+        }
+        
+        localStorage.setItem('user', JSON.stringify(data.user));
+        localStorage.setItem('isAuthenticated', 'true');
+        
+        showSuccess('Login successful! Redirecting...');
+        
+        setTimeout(() => {
+          window.location.href = '/index.html';
+        }, 1500);
+        
+      } catch (error) {
+        showError(error.message);
+        verifyBtn.disabled = false;
+        verifyBtn.innerHTML = '✅ VERIFY OTP';
+        
+        for (let i = 1; i <= 6; i++) {
+          document.getElementById(`otp${i}`).value = '';
+        }
+        document.getElementById('otp1').focus();
+      }
+    });
+
+    // ===== OTP INPUT AUTO-FOCUS =====
+    const otpInputs = document.querySelectorAll('.otp-input');
+    otpInputs.forEach((input, index) => {
+      input.addEventListener('input', (e) => {
+        if (e.target.value.length === 1 && index < 5) {
+          otpInputs[index + 1].focus();
+        }
+      });
+      
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && !e.target.value && index > 0) {
+          otpInputs[index - 1].focus();
+        }
+      });
+    });
+
+    // ===== RESEND OTP =====
+    document.getElementById('resend-otp').addEventListener('click', async () => {
+      hideMessages();
+      
+      try {
+        const response = await fetch(`${API_URL}/auth/resend-otp`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ username: currentUsername })
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to resend OTP');
+        }
+        
+        showSuccess('OTP resent successfully! Check your email.');
+        
+        for (let i = 1; i <= 6; i++) {
+          document.getElementById(`otp${i}`).value = '';
+        }
+        document.getElementById('otp1').focus();
+        
+      } catch (error) {
+        showError(error.message);
+      }
+    });
+
+    // ===== BACK TO LOGIN =====
+    document.getElementById('back-to-login').addEventListener('click', () => {
+      document.getElementById('otp-form').classList.add('hidden');
+      document.getElementById('login-form').classList.remove('hidden');
+      document.getElementById('password').value = '';
+      hideMessages();
+      
+      for (let i = 1; i <= 6; i++) {
+        document.getElementById(`otp${i}`).value = '';
+      }
+    });
+
+    // ===== TOGGLE FORMS =====
+    document.getElementById('show-register').addEventListener('click', () => {
+      document.getElementById('login-form').classList.add('hidden');
+      document.getElementById('register-form').classList.remove('hidden');
+      hideMessages();
+      document.getElementById('reg-username').focus();
+    });
+
+    document.getElementById('show-login').addEventListener('click', () => {
+      document.getElementById('register-form').classList.add('hidden');
+      document.getElementById('login-form').classList.remove('hidden');
+      hideMessages();
+      document.getElementById('username').focus();
+    });
+
+    // ===== HELPER FUNCTIONS =====
+    function showError(message) {
+      const errorDiv = document.getElementById('error-message');
+      errorDiv.textContent = message;
+      errorDiv.style.display = 'block';
+      setTimeout(() => errorDiv.style.display = 'none', 5000);
+    }
+
+    function showSuccess(message) {
+      const successDiv = document.getElementById('success-message');
+      successDiv.textContent = message;
+      successDiv.style.display = 'block';
+      setTimeout(() => successDiv.style.display = 'none', 5000);
+    }
+
+    function hideMessages() {
+      document.getElementById('error-message').style.display = 'none';
+      document.getElementById('success-message').style.display = 'none';
+    }
+
+    // ===== CHECK IF ALREADY LOGGED IN =====
+    if (localStorage.getItem('isAuthenticated') === 'true') {
+      window.location.href = '/index.html';
+    }
+  </script>
+</body>
+</html>

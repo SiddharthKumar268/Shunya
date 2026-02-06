@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Himalayan Mesh Protocol - Dashboard</title>
+  <link rel="icon" type="image/png" href="/assets/location.png">
+
+  <!-- LINK TO YOUR CSS FILE -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Leaflet CSS for Maps -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- QRCode.js Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <div style="text-align: center; margin-bottom: 15px;">
+        <h1 style="margin: 0;">🏔️ Himalayan Mesh Protocol</h1>
+        <p style="margin: 5px 0 0 0;">Indian Army / BSF Secure Communication Network</p>
+      </div>
+
+      <!-- Add this welcome section -->
+      <div style="text-align: center; margin-bottom: 15px;">
+        <p style="color: #000000; font-size: 16px; font-weight: 600; margin: 0;">
+          Welcome, <span id="user-name">Soldier</span>!
+        </p>
+      </div>
+      <div class="status-bar">
+        <span id="network-status">🔴 Offline</span>
+        <span id="soldier-count">Soldiers: 0</span>
+        <span id="connection-count">Connections: 0</span>
+        <span id="message-count">Messages: 0</span>
+      </div>
+
+      <div style="text-align: center; margin-top: 15px;">
+        <button onclick="logout()" style="
+  margin-left: auto; 
+  padding: 10px 20px; 
+  background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%); 
+  border: none; 
+  border-radius: 10px; 
+  color: white; 
+  cursor: pointer; 
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: 0 4px 15px rgba(255, 68, 68, 0.3);
+  transition: all 0.3s ease;
+" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 25px rgba(255, 68, 68, 0.5)';"
+          onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(255, 68, 68, 0.3)';"">
+       LOGOUT
+    </button>
+  </div>
+</header>
+
+    <div class=" main-content">
+          <div class="left-panel">
+            <div class="panel">
+              <h3>🎖️ Add Soldier to Network</h3>
+              <form id="add-soldier-form">
+                <input type="text" id="soldier-id" placeholder="Soldier ID (e.g., ARMY-ABC123)" required>
+                <input type="text" id="soldier-name" placeholder="Name" required>
+                <select id="soldier-unit" required>
+                  <option value="">Select Unit</option>
+                  <option value="Indian Army">Indian Army</option>
+                  <option value="BSF">BSF</option>
+                  <option value="ITBP">ITBP</option>
+                  <option value="Medical Team">Medical Team</option>
+                  <option value="Command Center">Command Center</option>
+                </select>
+                <select id="soldier-post" required>
+                  <option value="">Select Post</option>
+                  <option value="Siachen Base Camp">Siachen Base Camp</option>
+                  <option value="Kumar Post">Kumar Post</option>
+                  <option value="Bana Post">Bana Post</option>
+                  <option value="Sonam Post">Sonam Post</option>
+                  <option value="Amar Post">Amar Post</option>
+                  <option value="Command Center Leh">Command Center Leh</option>
+                </select>
+                <button type="submit">Add Soldier</button>
+              </form>
+            </div>
+
+            <!-- NEW FEATURE 1: QR Code Key Exchange -->
+            <div class="panel">
+              <h3>📱 QR Code Key Exchange</h3>
+              <select id="qr-soldier" required>
+                <option value="">Select Soldier for QR</option>
+              </select>
+              <button id="generate-qr-btn" onclick="generateQRCode()">Generate QR Code</button>
+              <div id="qr-code-display"></div>
+              <div id="qr-info"></div>
+            </div>
+
+            <div class="panel">
+              <h3>📨 Send Encrypted Message</h3>
+              <form id="send-message-form">
+                <select id="msg-from" required>
+                  <option value="">From Soldier</option>
+                </select>
+                <select id="msg-to" required>
+                  <option value="">To Soldier</option>
+                </select>
+                <textarea id="msg-content" placeholder="Message content..." required></textarea>
+
+                <!--  NEW: Image attachment -->
+                <div class="image-upload-section" style="margin-top: 15px;">
+                  <label for="msg-image" style="color: #00ff95; font-weight: 600; display: block; margin-bottom: 8px;">
+                    📸 Attach Image (Optional)
+                  </label>
+                  <label for="msg-image" style="
+  display: block;
+  padding: 12px 16px;
+  background-color: #162336;
+  border: 1px solid #2d4263;
+  border-radius: 6px;
+  color: #a8b8d8;
+  cursor: pointer;
+  text-align: left;
+  font-size: 14px;
+  margin-bottom: 10px;
+  transition: all 0.3s ease;
+" onmouseover="this.style.backgroundColor='#1a2942';" onmouseout="this.style.backgroundColor='#162336';"
+                    onclick="this.style.boxShadow='0 0 20px rgba(59, 130, 246, 0.6)'; setTimeout(() => this.style.boxShadow='none', 500);">
+                    Choose Image File
+                  </label>
+
+                  <input type="file" id="msg-image" accept="image/*" style="display: none;">
+                  <div id="image-preview"
+                    style="display: none; margin-top: 10px; padding: 10px; background: rgba(0,255,149,0.1); border-radius: 8px; border: 2px solid rgba(0,255,149,0.3);">
+                    <img id="preview-img"
+                      style="max-width: 100%; max-height: 200px; border-radius: 8px; display: block; margin: 0 auto;">
+                    <button type="button" id="remove-image"
+                      style="margin-top: 10px; padding: 8px 16px; font-size: 13px; background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%) !important;">
+                      ✕ Remove Image
+                    </button>
+                  </div>
+                </div>
+
+                <select id="msg-priority">
+                  <option value="low">Low Priority</option>
+                  <option value="medium" selected>Medium Priority</option>
+                  <option value="high">High Priority</option>
+                  <option value="critical">Critical Priority</option>
+                </select>
+                <select id="msg-type">
+                  <option value="general">General</option>
+                  <option value="patrol-update">Patrol Update</option>
+                  <option value="enemy-alert">Enemy Alert</option>
+                  <option value="medical-emergency">Medical Emergency</option>
+                  <option value="supply-request">Supply Request</option>
+                  <option value="weather-alert">Weather Alert</option>
+                </select>
+                <button type="submit">Send Message</button>
+              </form>
+            </div>
+
+            <!-- ✅ NEW FEATURE 3: Emergency SOS Beacon -->
+            <div class="panel emergency-panel">
+              <h3>🚨 Emergency SOS Beacon</h3>
+              <p class="sos-description">Broadcast encrypted emergency alert to ALL soldiers in network</p>
+              <select id="sos-from" required>
+                <option value="">Select Your ID</option>
+              </select>
+              <textarea id="sos-message" placeholder="Emergency details..." maxlength="200"></textarea>
+              <button id="sos-btn" class="sos-button" onclick="sendEmergencySOS()">🚨 SEND EMERGENCY SOS 🚨</button>
+              <div id="sos-status"></div>
+            </div>
+
+            <!-- ✅ NEW FEATURE: GPS Tracking Control -->
+            <div class="panel" style="border: 2px solid rgba(0, 212, 255, 0.5);">
+              <h3>🗺️ GPS Tracking Simulator</h3>
+              <p style="color: #00d4ff; font-size: 13px; margin-bottom: 15px;">
+                Simulate real-time soldier movement with location trails
+              </p>
+              <select id="gps-soldier" required>
+                <option value="">Select Soldier to Track</option>
+              </select>
+              <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button onclick="startGPSSimulation()"
+                  style="flex: 1; background: linear-gradient(135deg, #00ff95 0%, #00aa66 100%) !important; border-color: #00ff95 !important;">
+                  ▶️ Start Tracking
+                </button>
+                <button onclick="stopGPSSimulation()"
+                  style="flex: 1; background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%) !important;">
+                  ⏹️ Stop
+                </button>
+              </div>
+              <div id="gps-status"
+                style="margin-top: 15px; padding: 12px; background: rgba(0,0,0,0.3); border-radius: 8px; font-size: 12px; color: #00d4ff; text-align: center; display: none;">
+                🛰️ GPS tracking active...
+              </div>
+            </div>
+
+            <!-- ✅ NEW: Receive Messages Section -->
+            <div class="panel">
+              <h3>📥 Receive Messages</h3>
+              <select id="receive-soldier" required>
+                <option value="">Select Soldier to Check Messages</option>
+              </select>
+              <button id="receive-btn" onclick="receiveMessages()">Receive Messages</button>
+              <div id="received-messages"></div>
+            </div>
+
+            <!-- ✅ NEW: Message History Section -->
+            <div class="panel">
+              <h3>📜 Message History</h3>
+              <select id="history-soldier" required>
+                <option value="">Select Soldier</option>
+              </select>
+              <button id="history-btn" onclick="showMessageHistory()">View History</button>
+              <div id="message-history"></div>
+            </div>
+
+            <div class="panel">
+              <h3>🔐 Encryption Status</h3>
+              <div id="crypto-status">
+                <p>Encryption: <span class="status-badge">AES-256-CBC</span></p>
+                <p>Key Exchange: <span class="status-badge">RSA-2048</span></p>
+                <p>Signature: <span class="status-badge">SHA-256</span></p>
+                <p>Status: <span id="encryption-active" class="status-badge success">✅ Active</span></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="center-panel">
+            <div class="map-container">
+              <h3>🗺️ Network Map - Siachen Sector</h3>
+              <div id="real-map" style="height: 600px; width: 100%; border-radius: 12px;"></div>
+              <div class="map-legend">
+                <div><span class="legend-dot active"></span> Active Soldier</div>
+                <div><span class="legend-dot low-battery"></span> Low Battery</div>
+                <div><span class="legend-dot offline"></span> Offline</div>
+                <div><span class="legend-line"></span> Connection</div>
+              </div>
+              <!-- ✅ NEW FEATURE 2: Signal Strength Legend -->
+              <div class="signal-legend">
+                <div class="signal-indicator">
+                  <span class="signal-dot strong"></span>
+                  <span>Strong Signal</span>
+                </div>
+                <div class="signal-indicator">
+                  <span class="signal-dot medium"></span>
+                  <span>Medium Signal</span>
+                </div>
+                <div class="signal-indicator">
+                  <span class="signal-dot weak"></span>
+                  <span>Weak Signal</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- ✅ NEW: Encryption Visualization Panel -->
+            <div class="panel encryption-demo">
+              <h3>🔒 Encryption Demonstration</h3>
+              <div id="encryption-demo">
+                <div class="demo-section">
+                  <h4>📝 Original Message</h4>
+                  <div id="demo-original" class="demo-content">Send a message to see encryption in action...</div>
+                </div>
+                <div class="demo-section">
+                  <h4>🔐 Encrypted Content</h4>
+                  <div id="demo-encrypted" class="demo-content encrypted-text">Waiting for message...</div>
+                </div>
+                <div class="demo-section">
+                  <h4>✅ Decrypted at Receiver</h4>
+                  <div id="demo-decrypted" class="demo-content">Waiting for message...</div>
+                </div>
+                <div class="demo-section">
+                  <h4>🔑 Encryption Keys Used</h4>
+                  <div id="demo-keys" class="demo-content keys-info">
+                    <small>RSA Public Key (Encryption) + AES-256 (Content)</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="right-panel">
+            <div class="panel">
+              <h3>👥 Active Soldiers</h3>
+              <div id="soldier-list"></div>
+            </div>
+
+            <div class="panel">
+              <h3>📊 Network Statistics</h3>
+              <div id="network-stats">
+                <p>Total Messages: <span id="stat-messages">0</span></p>
+                <p>Delivered: <span id="stat-delivered">0</span></p>
+                <p>Average Hops: <span id="stat-hops">0</span></p>
+                <p>Delivery Rate: <span id="stat-rate">0%</span></p>
+              </div>
+            </div>
+
+            <!-- ✅ NEW: Delivery Confirmation Panel -->
+            <div class="panel">
+              <h3>📬 Delivery Confirmations</h3>
+              <div id="delivery-log"></div>
+            </div>
+
+            <div class="panel">
+              <h3>📝 Activity Log</h3>
+              <div id="activity-log"></div>
+            </div>
+          </div>
+      </div>
+  </div>
+
+  <footer style="
+      text-align: center;
+      padding: 25px;
+      background: linear-gradient(135deg, #0a1628 0%, #162336 100%);
+      border-top: 2px solid #2d4263;
+      margin-top: 30px;
+    ">
+    <p style="
+        color: #a8b8d8;
+        font-size: 16px;
+        margin: 0;
+        font-family: 'Segoe UI', Roboto, sans-serif;
+      ">
+      Developed by
+      <a href="https://siddharthkumar.tech" target="_blank" rel="noopener noreferrer" style="
+          color: #00ff95;
+          text-decoration: none;
+          font-weight: 700;
+          font-size: 18px;
+          transition: all 0.3s ease;
+          padding: 0 6px;
+        " onmouseover="this.style.color='#00d4ff'; this.style.textShadow='0 0 10px rgba(0,212,255,0.6)';"
+        onmouseout="this.style.color='#00ff95'; this.style.textShadow='none';">
+        Siddharth Kumar
+      </a>
+    </p>
+  </footer>
+
+  <!-- Socket.io -->
+  <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"></script>
+
+  <!-- Your JavaScript files -->
+  <script src="api.js"></script>
+  <script src="websocket.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>
