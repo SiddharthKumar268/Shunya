@@ -23,13 +23,13 @@
 <br/>
 
 ```
-╔══════════════════════════════════════════════════════════════════════════════╗
-║                                                                              ║
-║   🛡️  SECURING BORDERS  ·  🎖️  PROTECTING SOLDIERS  ·  ❤️  SAVING LIVES    ║
-║                                                                              ║
-║        Every message encrypted. Every route optimized. Every life matters.  ║
-║                                                                              ║
-╚══════════════════════════════════════════════════════════════════════════════╝
+                            ╔══════════════════════════════════════════════════════════════════════════════╗
+                            ║                                                                              ║
+                            ║   🛡️  SECURING BORDERS  ·  🎖️  PROTECTING SOLDIERS  ·  ❤️  SAVING LIVES     ║
+                            ║                                                                              ║
+                            ║        Every message encrypted. Every route optimized. Every life matters.   ║
+                            ║                                                                              ║
+                            ╚══════════════════════════════════════════════════════════════════════════════╝
 ```
 
 **[📥 Quick Start](#-installation--setup)** · **[🏗️ Architecture](#-system-architecture)** · **[🔐 Security](#-encryption-deep-dive)** · **[📡 API Docs](#-api-documentation)** · **[🗺️ Roadmap](#-future-roadmap)**
